@@ -1,0 +1,43 @@
+.Start {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  background-color: #282c34;
+  min-height: 100vh;
+}
+
+.Start-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.Start-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-size: 2rem;
+  color: white;
+}
+
+.Start-section {
+  display: flex;
+  justify-content: center;
+
+  gap: 1rem;
+}
+
+.Start-button {
+  padding: 1rem;
+  font-size: 2rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: ease scale 0.2s;
+}
+.Start-button:focus,
+.Start-button:hover {
+  scale: 1.25;
+}

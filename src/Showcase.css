@@ -1,0 +1,33 @@
+.Showcase {
+  display: flex;
+  flex-direction: column;
+
+  background-color: #282c34;
+  min-height: 100vh;
+}
+
+.Showcase-header {
+  padding: 1rem;
+}
+
+.Showcase-return {
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: ease scale 0.2s;
+}
+.Showcase-return:focus,
+.Showcase-return:hover {
+  scale: 1.25;
+}
+
+.Showcase-logo {
+  height: 50px;
+  pointer-events: none;
+}
+
+.Showcase-main {
+  padding: 1rem;
+}

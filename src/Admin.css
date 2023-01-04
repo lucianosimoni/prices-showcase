@@ -1,0 +1,40 @@
+.Admin {
+  display: flex;
+  flex-direction: column;
+
+  background-color: #282c34;
+  min-height: 100vh;
+}
+
+.Admin-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  padding: 1rem;
+  font-size: 1.5rem;
+  color: white;
+  border-bottom: 2px solid white;
+}
+
+.Admin-return {
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: ease scale 0.2s;
+}
+.Admin-return:focus,
+.Admin-return:hover {
+  scale: 1.25;
+}
+
+.Admin-logo {
+  height: 50px;
+  pointer-events: none;
+}
+
+.Admin-main {
+  padding: 1rem;
+}
