@@ -30,4 +30,32 @@
 
 .Showcase-main {
   padding: 1rem;
+  color: white;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 150px);
+}
+
+/* Item */
+.Showcase-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.Showcase-item-image {
+  height: 7rem;
+  width: 7rem;
+  border-radius: 1rem;
+}
+
+.Showcase-item-name {
+  font-size: 1.5rem;
+}
+
+.Showcase-item-price {
+  font-size: 2rem;
+}
+
+.Showcase-item-money-symbol {
+  font-size: 1.5rem;
 }

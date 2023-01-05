@@ -1,20 +1,11 @@
-import { onValue } from "firebase/database";
-import { useState } from "react";
+/* eslint-disable jsx-a11y/alt-text */
 import { useNavigate } from "react-router-dom";
 import "./Showcase.css";
-import { database, itemsRef } from "./utils/Firebase";
 
-function Showcase() {
-  const [items, setItems] = useState();
+function Showcase({ data }) {
   const navigate = useNavigate();
 
   const goToStart = () => navigate("/prices-showcase/");
-
-  onValue(itemsRef, (snapshot) => {
-    setItems(snapshot.val());
-    console.log("Snapshot received");
-    console.log(snapshot.val());
-  });
 
   return (
     <div className="Showcase">
@@ -23,7 +14,20 @@ function Showcase() {
           {"<"}
         </button>
       </header>
-      <main className="Showcase-main"></main>
+      <main className="Showcase-main">
+        {Object.values(data.items).map((item, index) => {
+          return (
+            <div key={index} className="Showcase-item">
+              <img src={item.imgUrl} className="Showcase-item-image" />
+              <span className="Showcase-item-name">{item.name}</span>
+              <span className="Showcase-item-price">
+                <span className="Showcase-item-money-symbol">£</span>
+                {item.price}
+              </span>
+            </div>
+          );
+        })}
+      </main>
     </div>
   );
 }
