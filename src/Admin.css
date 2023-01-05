@@ -6,6 +6,10 @@
   min-height: 100vh;
 }
 
+.Admin-h1 {
+  margin: 0;
+}
+
 .Admin-header {
   display: flex;
   flex-direction: row;
@@ -37,4 +41,32 @@
 
 .Admin-main {
   padding: 1rem;
+  color: white;
+}
+
+.Admin-section {
+  /* border: 1px solid white; */
+}
+
+/* Item List */
+.Admin-items-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding-left: 1rem;
+  gap: 0.5rem;
+}
+
+.Admin-list-item {
+  padding: 0.5rem;
+  border: 1px solid white;
+  cursor: pointer;
+  width: fit-content;
+  border-radius: 50px;
+  transition: ease scale 0.2s;
+}
+
+.Admin-list-item:hover,
+.Admin-list-item:focus {
+  scale: 1.25;
 }

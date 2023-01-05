@@ -40,7 +40,10 @@ function App() {
               path="/prices-showcase/showcase"
               element={<Showcase data={data} />}
             />
-            <Route path="/prices-showcase/admin" element={<Admin />} />
+            <Route
+              path="/prices-showcase/admin"
+              element={<Admin data={data} />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
