@@ -53,9 +53,9 @@ function Admin({ data }) {
                   key={index}
                   className="Admin-list-item"
                   tabIndex={index + 3}
-                  onClick={(event) => editItemClicked(item, index)}
+                  onClick={() => editItemClicked(item, index)}
                 >
-                  {item.name} - £{item.price}
+                  {item.namePtBr} - £{item.price}
                 </li>
               );
             })}
@@ -79,9 +79,28 @@ function Admin({ data }) {
         )}
         {showEdit.show && (
           <form className="Admin-edit-form">
-            <h2>Editando item {showEdit.data.item.name} </h2>
-            <img className="Admin-form-img" src={showEdit.data.item.imgUrl} />
-            <h4>Price: £{showEdit.data.item.price}</h4>
+            <h2>
+              Editando item <span>{showEdit.data.item.namePtBr}</span>{" "}
+            </h2>
+            <label htmlFor="namePtBr">Nome 🇧🇷:</label>
+            <input
+              id="namePtBr"
+              type={"text"}
+              placeholder={showEdit.data.item.namePtBr}
+            />
+            <label htmlFor="nameEn">Nome 🇬🇧:</label>
+            <input
+              id="nameEn"
+              type={"text"}
+              placeholder={showEdit.data.item.nameEn}
+            />
+            <label htmlFor="price">Preço:</label>
+            <input
+              id="price"
+              type={"number"}
+              placeholder={showEdit.data.item.price}
+            />
+            <button>Salvar</button>
           </form>
         )}
       </aside>

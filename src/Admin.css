@@ -112,14 +112,28 @@
   scale: 1.25;
 }
 
-.Admin-form-img {
-  height: 100px;
-  width: 100px;
-}
-
 .Admin-add-form {
 }
 .Admin-edit-form {
   display: flex;
   flex-direction: column;
+}
+.Admin-edit-form span {
+  color: yellow;
+}
+.Admin-edit-form label {
+  font-size: larger;
+}
+.Admin-edit-form input {
+  font-size: larger;
+  margin-bottom: 0.5rem;
+}
+.Admin-edit-form input::placeholder {
+  color: black;
+}
+.Admin-edit-form button {
+  cursor: pointer;
+  font-size: larger;
+  font-weight: bold;
+  padding: 0.5rem;
 }

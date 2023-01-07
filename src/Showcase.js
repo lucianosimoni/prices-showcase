@@ -22,8 +22,8 @@ function Showcase({ data }) {
           const item = eval(`data.items.${itemRef}`);
           return (
             <div key={index} className="Showcase-item">
-              <span className="Showcase-item-name">{item.namePtBr}</span>
-              <span className="Showcase-item-name">{item.nameEn}</span>
+              <span className="Showcase-item-name-br">{item.namePtBr}</span>
+              <span className="Showcase-item-name-en">{item.nameEn}</span>
               <span className="Showcase-item-price">
                 <span className="Showcase-item-money-symbol">£</span>
                 {item.price}
