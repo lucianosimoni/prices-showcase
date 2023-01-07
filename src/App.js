@@ -35,9 +35,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/prices-showcase/" element={<Start />} />
+          <Route path="*" element={<Navigate to="/prices-showcase/" />} />
           <Route element={<RedirectToMain data={data} />}>
             <Route
-              path="/prices-showcase/showcase"
+              path="/prices-showcase/showcase/:page"
               element={<Showcase data={data} />}
             />
             <Route

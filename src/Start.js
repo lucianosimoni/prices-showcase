@@ -5,7 +5,7 @@ import "./Start.css";
 function Start() {
   const navigate = useNavigate();
 
-  const goToShowcase = () => navigate("/prices-showcase/showcase");
+  const goToShowcase = (page) => navigate(`/prices-showcase/showcase/${page}`);
   const goToAdmin = () => navigate("/prices-showcase/admin");
 
   return (
@@ -16,11 +16,22 @@ function Start() {
       </header>
       <main>
         <section className="Start-section">
-          <button className="Start-button" tabIndex={1} onClick={goToShowcase}>
-            Showcase
-          </button>
-          <button className="Start-button" tabIndex={2} onClick={goToAdmin}>
+          <button className="Start-button" tabIndex={1} onClick={goToAdmin}>
             Admin
+          </button>
+        </section>
+        <section className="Start-section">
+          <button className="Start-button" onClick={() => goToShowcase(1)}>
+            Tela 1
+          </button>
+          <button className="Start-button" onClick={() => goToShowcase(2)}>
+            Tela 2
+          </button>
+          <button className="Start-button" onClick={() => goToShowcase(3)}>
+            Tela 3
+          </button>
+          <button className="Start-button" onClick={() => goToShowcase(4)}>
+            Tela 4
           </button>
         </section>
       </main>

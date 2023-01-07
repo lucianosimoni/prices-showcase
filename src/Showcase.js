@@ -1,11 +1,14 @@
+/* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/alt-text */
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./Showcase.css";
 
 function Showcase({ data }) {
   const navigate = useNavigate();
-
+  const params = useParams();
+  const pageNum = params.page;
   const goToStart = () => navigate("/prices-showcase/");
+  let pageReference = eval(`data.page${pageNum}.itemsRef`);
 
   return (
     <div className="Showcase">
@@ -15,11 +18,12 @@ function Showcase({ data }) {
         </button>
       </header>
       <main className="Showcase-main">
-        {Object.values(data.items).map((item, index) => {
+        {Object.values(pageReference).map((itemRef, index) => {
+          const item = eval(`data.items.${itemRef}`);
           return (
             <div key={index} className="Showcase-item">
-              <img src={item.imgUrl} className="Showcase-item-image" />
-              <span className="Showcase-item-name">{item.name}</span>
+              <span className="Showcase-item-name">{item.namePtBr}</span>
+              <span className="Showcase-item-name">{item.nameEn}</span>
               <span className="Showcase-item-price">
                 <span className="Showcase-item-money-symbol">£</span>
                 {item.price}

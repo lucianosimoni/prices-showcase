@@ -39,13 +39,7 @@
 /* Item */
 .Showcase-item {
   display: flex;
-  flex-direction: column;
-}
-
-.Showcase-item-image {
-  height: 7rem;
-  width: 7rem;
-  border-radius: 1rem;
+  flex-direction: row;
 }
 
 .Showcase-item-name {
