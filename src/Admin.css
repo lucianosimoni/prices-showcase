@@ -2,8 +2,9 @@
   display: grid;
   grid-template-columns: 2fr 1fr;
   background-color: #282c34;
-  min-height: 100vh;
+  height: 100vh;
   color: white;
+  font-size: 14px;
 }
 
 .Admin-h1 {
@@ -15,6 +16,7 @@
   flex-direction: row;
   align-items: center;
   grid-column: span 2;
+  height: 50px;
 
   padding: 1rem;
   font-size: 1.5rem;
@@ -29,26 +31,29 @@
   font-size: 2rem;
   cursor: pointer;
   transition: ease scale 0.2s;
+  margin-right: 1rem;
 }
 .Admin-return:focus,
 .Admin-return:hover {
   scale: 1.25;
 }
 
-.Admin-logo {
-  height: 50px;
-  pointer-events: none;
-}
-
 .Admin-main {
+  display: flex;
   grid-column: 1;
   grid-row: 2;
-  padding: 1rem;
+  height: 100vh;
   border-right: 1px solid white;
 }
 
 .Admin-section {
   margin-bottom: 1rem;
+  padding: 0.5rem;
+  width: fit-content;
+  border: 1px solid white;
+}
+.Admin-section:nth-child(2) {
+  width: 100%;
 }
 
 .Admin-add-item {
@@ -112,18 +117,23 @@
   scale: 1.25;
 }
 
+/* FORMS */
 .Admin-add-form {
 }
+/* BASIC EDIT FORM */
 .Admin-edit-form {
   display: flex;
   flex-direction: column;
 }
+/* FORM SPAN */
 .Admin-edit-form span {
   color: yellow;
 }
+/* FORM LABEL */
 .Admin-edit-form label {
   font-size: larger;
 }
+/* FORM INPUT */
 .Admin-edit-form input {
   font-size: larger;
   margin-bottom: 0.5rem;
@@ -136,4 +146,13 @@
   font-size: larger;
   font-weight: bold;
   padding: 0.5rem;
+}
+
+.Admin-reorder-button {
+  border-radius: 50px;
+  transition: ease scale 0.2s;
+}
+.Admin-reorder-button:focus,
+.Admin-reorder-button:hover {
+  scale: 1.25;
 }

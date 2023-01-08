@@ -1,27 +1,67 @@
+/* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/alt-text */
 import { useNavigate } from "react-router-dom";
-import logo from "./logo.svg";
 import "./Admin.css";
 import { useState } from "react";
+import { arrayMoveImmutable } from "array-move";
+import { database, dataRef } from "./utils/Firebase";
+import { ref, set } from "firebase/database";
 
 function Admin({ data }) {
   const [showAdd, setShowAdd] = useState(false);
   const [showEdit, setShowEdit] = useState({ show: false, data: {} });
+  const [showPageEdit, setShowPageEdit] = useState(false);
   const navigate = useNavigate();
 
   const goToStart = () => navigate("/prices-showcase/");
 
   const addItemClicked = () => {
     setShowEdit({ show: false, data: {} });
+    setShowPageEdit({ show: false, pageNum: null });
     setShowAdd(true);
   };
   const editItemClicked = (item, index) => {
     setShowAdd(false);
+    setShowPageEdit({ show: false, pageNum: null });
     setShowEdit({ show: true, data: { item: item, index: index } });
   };
-  const closeAside = () => {
+  const editPageClicked = (pageNum) => {
     setShowAdd(false);
     setShowEdit({ show: false, data: {} });
+    setShowPageEdit({ show: true, pageNum: pageNum });
+  };
+  const closeAside = () => {
+    setShowPageEdit({ show: false, pageData: {} });
+    setShowAdd(false);
+    setShowEdit({ show: false, data: {} });
+  };
+
+  const reOrderItem = (event, upOrDown, index) => {
+    event.preventDefault();
+
+    const pageItemsRef = Object.values(
+      eval(`data.page${showPageEdit.pageNum}.itemsRef`)
+    );
+    const lastIndex = pageItemsRef.length - 1;
+    let toIndex;
+    if (upOrDown === "up") {
+      index === 0 ? (toIndex = lastIndex) : (toIndex = index - 1);
+    } else {
+      index === lastIndex ? (toIndex = 0) : (toIndex = index + 1);
+    }
+
+    const newPosArray = arrayMoveImmutable(pageItemsRef, index, toIndex);
+    const newPosObject = Object.assign({}, newPosArray);
+    set(
+      ref(database, `/thegardenbutcher/page${showPageEdit.pageNum}/itemsRef`),
+      newPosObject
+    );
+  };
+
+  const pageEditSubmit = (event) => {
+    event.preventDefault();
+    console.log(event.target[0].value);
+    // TODO: Send pageColumns to pageID/info/columns
   };
 
   return (
@@ -30,11 +70,11 @@ function Admin({ data }) {
         <button className="Admin-return" tabIndex={1} onClick={goToStart}>
           {"<"}
         </button>
-        <img src={logo} className="Admin-logo" alt="logo" />
         <span>The Garden Butcher</span>
       </header>
 
       <main className="Admin-main">
+        {/* Actions menu */}
         <section className="Admin-section">
           <button
             className="Admin-add-item"
@@ -44,6 +84,8 @@ function Admin({ data }) {
             Add Item
           </button>
         </section>
+
+        {/* List of Items */}
         <section className="Admin-section">
           <h1 className="Admin-h1">Lista dos Items</h1>
           <ul className="Admin-items-list">
@@ -61,6 +103,25 @@ function Admin({ data }) {
             })}
           </ul>
         </section>
+
+        {/* List of Pages */}
+        <section className="Admin-section">
+          <h1 className="Admin-h1">Editar layout das Páginas</h1>
+          <ul className="Admin-items-list">
+            <li className="Admin-list-item" onClick={() => editPageClicked(1)}>
+              Página 1
+            </li>
+            <li className="Admin-list-item" onClick={() => editPageClicked(2)}>
+              Página 2
+            </li>
+            <li className="Admin-list-item" onClick={() => editPageClicked(3)}>
+              Página 3
+            </li>
+            <li className="Admin-list-item" onClick={() => editPageClicked(4)}>
+              Página 4
+            </li>
+          </ul>
+        </section>
       </main>
 
       <aside className="Admin-aside">
@@ -72,11 +133,15 @@ function Admin({ data }) {
         >
           X
         </button>
+
+        {/* Add menu */}
         {showAdd && (
           <form className="Admin-add-form">
             <h2>Add item</h2>
           </form>
         )}
+
+        {/* Edit item menu */}
         {showEdit.show && (
           <form className="Admin-edit-form">
             <h2>
@@ -101,6 +166,47 @@ function Admin({ data }) {
               placeholder={showEdit.data.item.price}
             />
             <button>Salvar</button>
+          </form>
+        )}
+
+        {/* Edit page menu */}
+        {showPageEdit.show && (
+          <form
+            className="Admin-edit-form"
+            onSubmit={(event) => pageEditSubmit(event)}
+          >
+            <h2>Editando Pagina 1</h2>
+            <label htmlFor="pageColumns">Numero de Colunas:</label>
+            <input
+              id="pageColumns"
+              type={"number"}
+              placeholder={eval(
+                `data.page${showPageEdit.pageNum}.info.columns`
+              )}
+            />
+            <label>Ordem dos Items da pagina:</label>
+            <ul>
+              {Object.values(
+                eval(`data.page${showPageEdit.pageNum}.itemsRef`)
+              ).map((item, index) => (
+                <li key={index}>
+                  {item}
+                  <button
+                    className="Admin-reorder-button"
+                    onClick={(event) => reOrderItem(event, "up", index)}
+                  >
+                    ↑
+                  </button>
+                  <button
+                    className="Admin-reorder-button"
+                    onClick={(event) => reOrderItem(event, "down", index)}
+                  >
+                    ↓
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <button type="submit">Salvar</button>
           </form>
         )}
       </aside>
