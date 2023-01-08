@@ -5,7 +5,7 @@ import "./Admin.css";
 import { useState } from "react";
 import { arrayMoveImmutable } from "array-move";
 import { database, dataRef } from "./utils/Firebase";
-import { ref, set } from "firebase/database";
+import { ref, set, update } from "firebase/database";
 
 function Admin({ data }) {
   const [showAdd, setShowAdd] = useState(false);
@@ -60,8 +60,12 @@ function Admin({ data }) {
 
   const pageEditSubmit = (event) => {
     event.preventDefault();
-    console.log(event.target[0].value);
+    const newColumnsNum = event.target[0].value;
     // TODO: Send pageColumns to pageID/info/columns
+    update(
+      ref(database, `/thegardenbutcher/page${showPageEdit.pageNum}/info`),
+      { columns: newColumnsNum }
+    );
   };
 
   return (

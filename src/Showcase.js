@@ -8,7 +8,7 @@ function Showcase({ data }) {
   const params = useParams();
   const pageNum = params.page;
   const goToStart = () => navigate("/prices-showcase/");
-  let pageReference = eval(`data.page${pageNum}.itemsRef`);
+  let pageReference = eval(`data.page${pageNum}`);
 
   return (
     <div className="Showcase">
@@ -17,8 +17,13 @@ function Showcase({ data }) {
           {"<"}
         </button>
       </header>
-      <main className="Showcase-main">
-        {Object.values(pageReference).map((itemRef, index) => {
+      <main
+        className="Showcase-main"
+        style={{
+          gridTemplateColumns: `repeat(${pageReference.info.columns}, 1fr)`,
+        }}
+      >
+        {Object.values(pageReference.itemsRef).map((itemRef, index) => {
           const item = eval(`data.items.${itemRef}`);
           return (
             <div key={index} className="Showcase-item">
