@@ -20,10 +20,10 @@ function Admin({ data }) {
     setShowPageEdit({ show: false, pageNum: null });
     setShowAdd(true);
   };
-  const editItemClicked = (item, index) => {
+  const editItemClicked = (item) => {
     setShowAdd(false);
     setShowPageEdit({ show: false, pageNum: null });
-    setShowEdit({ show: true, data: { item: item, index: index } });
+    setShowEdit({ show: true, itemData: item });
   };
   const editPageClicked = (pageNum) => {
     setShowAdd(false);
@@ -38,7 +38,6 @@ function Admin({ data }) {
 
   const reOrderItem = (event, upOrDown, index) => {
     event.preventDefault();
-
     const pageItemsRef = Object.values(
       eval(`data.page${showPageEdit.pageNum}.itemsRef`)
     );
@@ -52,6 +51,7 @@ function Admin({ data }) {
 
     const newPosArray = arrayMoveImmutable(pageItemsRef, index, toIndex);
     const newPosObject = Object.assign({}, newPosArray);
+    // Updates the Order in the DB
     set(
       ref(database, `/thegardenbutcher/page${showPageEdit.pageNum}/itemsRef`),
       newPosObject
@@ -61,10 +61,68 @@ function Admin({ data }) {
   const pageEditSubmit = (event) => {
     event.preventDefault();
     const newColumnsNum = event.target[0].value;
-    // TODO: Send pageColumns to pageID/info/columns
+    // Update the Columns info in the DB
     update(
       ref(database, `/thegardenbutcher/page${showPageEdit.pageNum}/info`),
       { columns: newColumnsNum }
+    );
+    event.target[0].value = "";
+  };
+
+  const itemEditSubmit = (event) => {
+    event.preventDefault();
+
+    const newNamePtBr = event.target[0];
+    const newNameEn = event.target[1];
+    const newPrice = event.target[2];
+    const newPage = event.target[3];
+
+    // Update newPage value
+    if (newPage.value !== "" && !(newPage.value > 4) && !(newPage.value <= 0)) {
+      updateItemPage(
+        showEdit.itemData.id,
+        eval(`data.items.${showEdit.itemData.id}.page`), // Old page
+        newPage.value // New page
+      );
+    } else return alert("Pagina tem que ser entre 1 e 4 apenas!");
+
+    update(ref(database, `/thegardenbutcher/items/${showEdit.itemData.id}`), {
+      // New name or same
+      namePtBr:
+        newNamePtBr.value === ""
+          ? showEdit.itemData.namePtBr
+          : newNamePtBr.value,
+      // New name or same
+      nameEn:
+        newNameEn.value === "" ? showEdit.itemData.nameEn : newNameEn.value,
+      // New price or same
+      price: newPrice.value === "" ? showEdit.itemData.price : newPrice.value,
+      // New page or same
+      page: newPage.value === "" ? showEdit.itemData.page : newPage.value,
+    });
+
+    newNamePtBr.value = "";
+    newNameEn.value = "";
+    newPrice.value = "";
+    newPage.value = "";
+  };
+
+  const updateItemPage = (itemId, oldPage, newPage) => {
+    // OLD PAGE --------------
+    let oldPageItemsRef = Object.values(eval(`data.page${oldPage}.itemsRef`));
+    oldPageItemsRef = oldPageItemsRef.filter((item) => item !== itemId);
+    set(
+      ref(database, `/thegardenbutcher/page${oldPage}/itemsRef`),
+      Object.assign({}, oldPageItemsRef) // Array to Object
+    );
+
+    // NEW PAGE --------------
+    console.log("new page is: ", newPage);
+    const newPageItemsRef = Object.values(eval(`data.page${newPage}.itemsRef`));
+    newPageItemsRef.push(itemId);
+    set(
+      ref(database, `/thegardenbutcher/page${newPage}/itemsRef`),
+      Object.assign({}, newPageItemsRef)
     );
   };
 
@@ -99,7 +157,7 @@ function Admin({ data }) {
                   key={index}
                   className="Admin-list-item"
                   tabIndex={index + 3}
-                  onClick={() => editItemClicked(item, index)}
+                  onClick={() => editItemClicked(item)}
                 >
                   {item.namePtBr} - £{item.price}
                 </li>
@@ -147,29 +205,45 @@ function Admin({ data }) {
 
         {/* Edit item menu */}
         {showEdit.show && (
-          <form className="Admin-edit-form">
+          <form
+            className="Admin-edit-form"
+            onSubmit={(event) => itemEditSubmit(event)}
+          >
+            {/* TITLE */}
             <h2>
-              Editando item <span>{showEdit.data.item.namePtBr}</span>{" "}
+              Editando item{" "}
+              <span>{eval(`data.items.${showEdit.itemData.id}.namePtBr`)}</span>{" "}
             </h2>
+            {/* PORTUGUESE NAME */}
             <label htmlFor="namePtBr">Nome 🇧🇷:</label>
             <input
               id="namePtBr"
               type={"text"}
-              placeholder={showEdit.data.item.namePtBr}
+              placeholder={eval(`data.items.${showEdit.itemData.id}.namePtBr`)}
             />
+            {/* ENGLISH NAME */}
             <label htmlFor="nameEn">Nome 🇬🇧:</label>
             <input
               id="nameEn"
               type={"text"}
-              placeholder={showEdit.data.item.nameEn}
+              placeholder={eval(`data.items.${showEdit.itemData.id}.nameEn`)}
             />
-            <label htmlFor="price">Preço:</label>
+            {/* PRICE */}
+            <label htmlFor="price">Preço: </label>
             <input
               id="price"
               type={"number"}
-              placeholder={showEdit.data.item.price}
+              placeholder={eval(`data.items.${showEdit.itemData.id}.price`)}
             />
-            <button>Salvar</button>
+            {/* PAGE */}
+            <label htmlFor="page">Página: </label>
+            <input
+              id="page"
+              type={"number"}
+              placeholder={eval(`data.items.${showEdit.itemData.id}.page`)}
+            />
+            {/* SUBMIT */}
+            <button type="submit">Salvar</button>
           </form>
         )}
 
@@ -179,7 +253,9 @@ function Admin({ data }) {
             className="Admin-edit-form"
             onSubmit={(event) => pageEditSubmit(event)}
           >
-            <h2>Editando Pagina 1</h2>
+            <h2>
+              Editando Pagina <span>{showPageEdit.pageNum}</span>
+            </h2>
             <label htmlFor="pageColumns">Numero de Colunas:</label>
             <input
               id="pageColumns"
@@ -187,6 +263,7 @@ function Admin({ data }) {
               placeholder={eval(
                 `data.page${showPageEdit.pageNum}.info.columns`
               )}
+              required
             />
             <label>Ordem dos Items da pagina:</label>
             <ul>

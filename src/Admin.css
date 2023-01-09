@@ -139,7 +139,8 @@
   margin-bottom: 0.5rem;
 }
 .Admin-edit-form input::placeholder {
-  color: black;
+  color: rgba(0, 0, 0, 0.438);
+  font-weight: bold;
 }
 .Admin-edit-form button {
   cursor: pointer;
