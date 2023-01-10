@@ -117,12 +117,58 @@ function Admin({ data }) {
     );
 
     // NEW PAGE --------------
-    console.log("new page is: ", newPage);
     const newPageItemsRef = Object.values(eval(`data.page${newPage}.itemsRef`));
     newPageItemsRef.push(itemId);
     set(
       ref(database, `/thegardenbutcher/page${newPage}/itemsRef`),
       Object.assign({}, newPageItemsRef)
+    );
+  };
+
+  const addItemSubmit = (event) => {
+    event.preventDefault();
+
+    // Create ID
+    let id = String(event.target[0].value);
+    id = id.replace(/\s/g, "");
+    id = id.charAt(0).toLowerCase() + id.slice(1);
+    console.log("id is: ", id);
+
+    const namePtBr = event.target[0].value;
+    const nameEn = event.target[1].value;
+    const price = event.target[2].value;
+    const page = event.target[3].value;
+
+    // Check if the id already exists
+    const foundItem = Object.values(data.items).find((item) => item.id === id);
+    if (foundItem !== undefined) {
+      return alert(
+        `⚠️ Um Item com o nome [${id}] foi encontrado no Servidor! 
+        \nItem existente: 
+        - ID: ${foundItem.id} ⬅️
+        - Nome: ${foundItem.namePtBr}
+        - Página: ${foundItem.page}
+        \n
+        ⚠️ O id deve ser Unico. Ele é criado a partir do Nome
+        🔴Tente novamente com um novo Nome.🔴 ⬅️`
+      );
+    }
+
+    // Save to DB items
+    set(ref(database, `/thegardenbutcher/items/${id}`), {
+      id: id,
+      nameEn: nameEn,
+      namePtBr: namePtBr,
+      page: page,
+      price: price,
+    });
+
+    // Save to page ItemsRef
+    const pageItemsRef = Object.values(eval(`data.page${page}.itemsRef`));
+    pageItemsRef.push(id);
+    set(
+      ref(database, `/thegardenbutcher/page${page}/itemsRef`),
+      Object.assign({}, pageItemsRef)
     );
   };
 
@@ -198,8 +244,47 @@ function Admin({ data }) {
 
         {/* Add menu */}
         {showAdd && (
-          <form className="Admin-add-form">
-            <h2>Add item</h2>
+          <form
+            className="Admin-edit-form"
+            onSubmit={(event) => addItemSubmit(event)}
+          >
+            <h2>
+              Adicionando <span>Novo item</span>
+            </h2>
+            {/* PORTUGUESE NAME */}
+            <label htmlFor="namePtBr">Nome 🇧🇷:</label>
+            <input
+              id="namePtBr"
+              type={"text"}
+              placeholder="Digite nome em Potuguês"
+              required
+            />
+            {/* ENGLISH NAME */}
+            <label htmlFor="nameEn">Nome 🇬🇧:</label>
+            <input
+              id="nameEn"
+              type={"text"}
+              placeholder="Digite nome em Inglês"
+              required
+            />
+            {/* PRICE */}
+            <label htmlFor="price">Preço: </label>
+            <input
+              id="price"
+              type={"number"}
+              placeholder="Preço do produto"
+              required
+            />
+            {/* PAGE */}
+            <label htmlFor="page-add">Página: </label>
+            <input
+              id="page-add"
+              type={"number"}
+              placeholder="De 1 a 4"
+              required
+            />
+            {/* SUBMIT */}
+            <button type="submit">Criar Item</button>
           </form>
         )}
 
