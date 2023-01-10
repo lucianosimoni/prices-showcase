@@ -288,7 +288,7 @@ function Admin({ data }) {
             <input
               id="namePtBr"
               type={"text"}
-              placeholder="Digite nome em Potuguês"
+              placeholder="Digite nome em Português"
               required
             />
             {/* ENGLISH NAME */}
