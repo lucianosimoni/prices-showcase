@@ -8,6 +8,20 @@ function Start() {
   const goToShowcase = (page) => navigate(`/prices-showcase/showcase/${page}`);
   const goToAdmin = () => navigate("/prices-showcase/admin");
 
+  function closeFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      /* Safari */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      /* IE11 */
+      document.msExitFullscreen();
+    }
+  }
+
+  closeFullscreen();
+
   return (
     <div className="Start">
       <header className="Start-header">
