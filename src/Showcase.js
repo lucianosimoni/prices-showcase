@@ -7,8 +7,37 @@ function Showcase({ data }) {
   const navigate = useNavigate();
   const params = useParams();
   const pageNum = params.page;
-  const goToStart = () => navigate("/prices-showcase/");
+  const goToStart = () => {
+    closeFullscreen();
+    navigate("/prices-showcase/");
+  };
   const pageReference = eval(`data.page${pageNum}`);
+
+  var elem = document.documentElement;
+  function openFullscreen() {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+      /* Safari */
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+      /* IE11 */
+      elem.msRequestFullscreen();
+    }
+  }
+  function closeFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      /* Safari */
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      /* IE11 */
+      document.msExitFullscreen();
+    }
+  }
+
+  openFullscreen();
 
   return (
     <div className="Showcase">
