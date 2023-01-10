@@ -140,9 +140,6 @@ function Admin({ data }) {
   const deleteItem = (item) => {
     const deleteItem = window.confirm("Deletar item?");
     if (deleteItem) {
-      // Remove from Items
-      remove(ref(database, `/thegardenbutcher/items/${item.id}`));
-
       // Find the Index of the itemRef to remove
       let pageItemsRef = Object.values(eval(`data.page${item.page}.itemsRef`));
       pageItemsRef = pageItemsRef.filter((itemRef) => itemRef !== item.id);
@@ -150,6 +147,9 @@ function Admin({ data }) {
         ref(database, `/thegardenbutcher/page${item.page}/itemsRef`),
         Object.assign({}, pageItemsRef)
       );
+
+      // Remove from Items
+      remove(ref(database, `/thegardenbutcher/items/${item.id}`));
 
       closeAside();
     }

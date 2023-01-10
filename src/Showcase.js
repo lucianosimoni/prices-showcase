@@ -8,7 +8,7 @@ function Showcase({ data }) {
   const params = useParams();
   const pageNum = params.page;
   const goToStart = () => navigate("/prices-showcase/");
-  let pageReference = eval(`data.page${pageNum}`);
+  const pageReference = eval(`data.page${pageNum}`);
 
   return (
     <div className="Showcase">
