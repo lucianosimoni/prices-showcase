@@ -9,15 +9,15 @@ import { useEffect, useState } from "react";
 import Start from "./Start";
 import Showcase from "./Showcase";
 import Admin from "./Admin";
-import { onValue } from "firebase/database";
-import { dataRef } from "./utils/Firebase";
+import { onValue, ref } from "firebase/database";
+import { database } from "./utils/Firebase";
 
 function App() {
   const [data, setData] = useState();
 
   useEffect(() => {
     onValue(
-      dataRef,
+      ref(database, "/thegardenbutcher"),
       (snapshot) => {
         console.log("Snapshot received");
         console.log(snapshot.val());

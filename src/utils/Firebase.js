@@ -22,4 +22,3 @@ const analytics = getAnalytics(app);
 
 // Realtime-database
 export const database = getDatabase();
-export const dataRef = ref(database, "/thegardenbutcher");

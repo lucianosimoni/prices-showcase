@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import "./Admin.css";
 import { useState } from "react";
 import { arrayMoveImmutable } from "array-move";
-import { database, dataRef } from "./utils/Firebase";
-import { ref, set, update } from "firebase/database";
+import { database } from "./utils/Firebase";
+import { ref, remove, set, update } from "firebase/database";
 
 function Admin({ data }) {
   const [showAdd, setShowAdd] = useState(false);
@@ -78,27 +78,39 @@ function Admin({ data }) {
     const newPage = event.target[3];
 
     // Update newPage value
-    if (newPage.value !== "" && !(newPage.value > 4) && !(newPage.value <= 0)) {
-      updateItemPage(
-        showEdit.itemData.id,
-        eval(`data.items.${showEdit.itemData.id}.page`), // Old page
-        newPage.value // New page
-      );
-    } else return alert("Pagina tem que ser entre 1 e 4 apenas!");
+    // If there is a value assigned to Page, Check and Update Page:Id ItemsRef
+    if (newPage.value !== "") {
+      if (!(newPage.value > 4) && !(newPage.value <= 0)) {
+        updateItemPage(
+          showEdit.itemData.id,
+          eval(`data.items.${showEdit.itemData.id}.page`), // Old page
+          newPage.value // New page
+        );
+      } else return alert("Pagina tem que ser entre 1 e 4 apenas!");
+    }
 
+    // Update Items
     update(ref(database, `/thegardenbutcher/items/${showEdit.itemData.id}`), {
       // New name or same
       namePtBr:
         newNamePtBr.value === ""
-          ? showEdit.itemData.namePtBr
+          ? eval(`data.items.${showEdit.itemData.id}.namePtBr`)
           : newNamePtBr.value,
       // New name or same
       nameEn:
-        newNameEn.value === "" ? showEdit.itemData.nameEn : newNameEn.value,
+        newNameEn.value === ""
+          ? eval(`data.items.${showEdit.itemData.id}.nameEn`)
+          : newNameEn.value,
       // New price or same
-      price: newPrice.value === "" ? showEdit.itemData.price : newPrice.value,
+      price:
+        newPrice.value === ""
+          ? eval(`data.items.${showEdit.itemData.id}.price`)
+          : newPrice.value,
       // New page or same
-      page: newPage.value === "" ? showEdit.itemData.page : newPage.value,
+      page:
+        newPage.value === ""
+          ? eval(`data.items.${showEdit.itemData.id}.page`)
+          : newPage.value,
     });
 
     newNamePtBr.value = "";
@@ -123,6 +135,24 @@ function Admin({ data }) {
       ref(database, `/thegardenbutcher/page${newPage}/itemsRef`),
       Object.assign({}, newPageItemsRef)
     );
+  };
+
+  const deleteItem = (item) => {
+    const deleteItem = window.confirm("Deletar item?");
+    if (deleteItem) {
+      // Remove from Items
+      remove(ref(database, `/thegardenbutcher/items/${item.id}`));
+
+      // Find the Index of the itemRef to remove
+      let pageItemsRef = Object.values(eval(`data.page${item.page}.itemsRef`));
+      pageItemsRef = pageItemsRef.filter((itemRef) => itemRef !== item.id);
+      set(
+        ref(database, `/thegardenbutcher/page${item.page}/itemsRef`),
+        Object.assign({}, pageItemsRef)
+      );
+
+      closeAside();
+    }
   };
 
   const addItemSubmit = (event) => {
@@ -170,6 +200,8 @@ function Admin({ data }) {
       ref(database, `/thegardenbutcher/page${page}/itemsRef`),
       Object.assign({}, pageItemsRef)
     );
+
+    closeAside();
   };
 
   return (
@@ -272,7 +304,8 @@ function Admin({ data }) {
             <input
               id="price"
               type={"number"}
-              placeholder="Preço do produto"
+              placeholder="0.00"
+              step=".01"
               required
             />
             {/* PAGE */}
@@ -318,6 +351,7 @@ function Admin({ data }) {
             <input
               id="price"
               type={"number"}
+              step=".01"
               placeholder={eval(`data.items.${showEdit.itemData.id}.price`)}
             />
             {/* PAGE */}
@@ -327,8 +361,18 @@ function Admin({ data }) {
               type={"number"}
               placeholder={eval(`data.items.${showEdit.itemData.id}.page`)}
             />
+            {/* DELETE */}
+            <button
+              type="button"
+              className="Admin-delete-button"
+              onClick={() => deleteItem(showEdit.itemData)}
+            >
+              Excluir Item
+            </button>
             {/* SUBMIT */}
-            <button type="submit">Salvar</button>
+            <button className="Admin-save-button" type="submit">
+              Salvar
+            </button>
           </form>
         )}
 

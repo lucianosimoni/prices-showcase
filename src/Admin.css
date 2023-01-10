@@ -42,7 +42,8 @@
   display: flex;
   grid-column: 1;
   grid-row: 2;
-  height: 100vh;
+  height: 90vh;
+  overflow: hidden;
   border-right: 1px solid white;
 }
 
@@ -51,6 +52,9 @@
   padding: 0.5rem;
   width: fit-content;
   border: 1px solid white;
+  height: 90%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .Admin-section:nth-child(2) {
   width: 100%;
@@ -153,4 +157,13 @@
 .Admin-reorder-button:focus,
 .Admin-reorder-button:hover {
   scale: 1.25;
+}
+
+.Admin-delete-button {
+  background-color: tomato;
+  color: white;
+}
+.Admin-save-button {
+  background-color: yellowgreen;
+  color: black;
 }
