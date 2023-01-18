@@ -1,20 +1,15 @@
 /* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/alt-text */
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "./Showcase.css";
 
 function Showcase({ data }) {
-  const navigate = useNavigate();
   const params = useParams();
   const pageNum = params.page;
-  const goToStart = () => {
-    closeFullscreen();
-    navigate("/prices-showcase/");
-  };
   const pageReference = eval(`data.page${pageNum}`);
 
-  var elem = document.documentElement;
   function openFullscreen() {
+    var elem = document.documentElement;
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
     } else if (elem.webkitRequestFullscreen) {
@@ -25,27 +20,14 @@ function Showcase({ data }) {
       elem.msRequestFullscreen();
     }
   }
-  function closeFullscreen() {
-    if (document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if (document.webkitExitFullscreen) {
-      /* Safari */
-      document.webkitExitFullscreen();
-    } else if (document.msExitFullscreen) {
-      /* IE11 */
-      document.msExitFullscreen();
-    }
-  }
-
   openFullscreen();
 
   return (
     <div className="Showcase">
       <header className="Showcase-header">
-        <button className="Showcase-return" tabIndex={1} onClick={goToStart}>
-          {"<"}
-        </button>
+        <h1></h1>
       </header>
+
       <main
         className="Showcase-main"
         style={{
