@@ -1,17 +1,16 @@
 /* eslint-disable no-eval */
 /* eslint-disable jsx-a11y/alt-text */
 import { storage } from "./utils/Firebase";
+import { getDownloadURL, ref } from "firebase/storage";
 import { useParams } from "react-router-dom";
 import "./Showcase.css";
-import { ref } from "firebase/database";
 
 function Showcase({ data }) {
-  const params = useParams();
-  const pageNum = params.page;
+  const pageNum = useParams().page;
   const pageData = eval(`data.page${pageNum}`);
 
   function openFullscreen() {
-    var elem = document.documentElement;
+    const elem = document.documentElement;
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
     } else if (elem.webkitRequestFullscreen) {
@@ -23,7 +22,10 @@ function Showcase({ data }) {
     }
   }
   openFullscreen();
-  console.log(pageData.info.backgroundImageLeft);
+
+  const bgImageLeftRef = ref(storage, `images/page${pageNum}left.png`);
+  console.log(`Image Left name of page ${pageNum} is:`);
+  getDownloadURL(bgImageLeftRef).then((url) => console.log(url));
 
   return (
     <div className="Showcase">
